@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -13,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 app.use("uploads", express.static(path.join(__dirname, "/uploads")));
 
-let url = "mongodb+srv://zohishka04:omqScYUksU8T9pA6@crud.mntdg.mongodb.net/?retryWrites=true&w=majority&appName=crud";
+let url = process.env.MONGO_URI;
 
 mongoose
 .connect(url)

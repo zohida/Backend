@@ -5,7 +5,7 @@ const User = require("../models/user");
 const authenticateToken = require("../middleware/authMiddleware");
 const router = express.Router();
 
-const SECRET_KEY = "devbilanpakana";
+const SECRET_KEY = process.env.SECRET_KEY;
 
 // REgister
 
