@@ -11,7 +11,9 @@ const ProductRouter = require("./routes/products");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: "https://keen-beignet-269c7b.netlify.app",
+  }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 let url = process.env.MONGO_URI;
