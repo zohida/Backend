@@ -15,25 +15,14 @@ const upload = multer({ storage });
 router.get("/", async (req, res) => {
   try {
     const products = await Product.find().populate("category");
-
-    const updatedProducts = products.map((product) => {
-      const productImage = product.image
-        ? `${req.protocol}://${req.get("host")}/${product.image.replace(/\\/g, "/")}`
-        : `${req.protocol}://${req.get("host")}/uploads/default-product.png`;
-
-      const categoryImage = product.category?.image
-        ? `${req.protocol}://${req.get("host")}/${product.category.image.replace(/\\/g, "/")}`
-        : `${req.protocol}://${req.get("host")}/uploads/default-category.png`;
-
-      return {
-        ...product._doc,
-        image: productImage,
-        category: {
-          ...product.category?._doc,
-          image: categoryImage,
-        },
-      };
-    });
+    const updatedProducts = products.map((product) => ({
+      ...product._doc,
+      image: `${req.protocol}://${req.get("host")}/${product.image.replace(/\\/g, "/")}`, 
+      category: {
+        ...product.category._doc,
+        image: `${req.protocol}://${req.get("host")}/${product.category.image.replace(/\\/g, "/")}`, 
+      },
+    }));
 
     res.json({
       products: updatedProducts,
@@ -42,12 +31,9 @@ router.get("/", async (req, res) => {
       limit: 10,
     });
   } catch (error) {
-    console.error("Error fetching products:", error.message);
     res.status(500).json({ error: "Failed to fetch products" });
   }
 });
-
-
 
 
 
