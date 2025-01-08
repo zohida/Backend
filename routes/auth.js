@@ -72,4 +72,8 @@ router.get("/users", authenticateToken, async (req,res) => {
     }
 });
 
+router.get("/register", (req, res) => {
+  res.status(200).json({ message: "Registration endpoint is working!" });
+});
+
 module.exports = router;

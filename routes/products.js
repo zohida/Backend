@@ -14,26 +14,26 @@ const upload = multer({ storage });
 
 router.get("/", async (req, res) => {
   try {
-    const { page = 1, limit = 10, sort = "name", category, minPrice, maxPrice } = req.query;
-
-    const filter = {};
-    if (category) filter.category = category;
-    if (minPrice) filter.price = { $gte: minPrice };
-    if (maxPrice) filter.price = { ...filter.price, $lte: maxPrice };
-
-    const products = await Product.find(filter)
-      .populate("category")
-      .sort(sort)
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
-
-    const total = await Product.countDocuments(filter);
-
-    res.json({ products, total, page: Number(page), limit: Number(limit) });
+    const products = await Product.find().populate("category");
+    const updatedProducts = products.map((product) => ({
+      ...product._doc,
+      image: `${req.protocol}://${req.get("host")}/${product.image}`,
+      category: {
+        ...product.category._doc,
+        image: `${req.protocol}://${req.get("host")}/${product.category.image}`,
+      },
+    }));
+    res.json({
+      products: updatedProducts,
+      total: updatedProducts.length,
+      page: 1,
+      limit: 10,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ error: "Failed to fetch products" });
   }
 });
+
 
 
 router.get("/:id", async (req, res) => {

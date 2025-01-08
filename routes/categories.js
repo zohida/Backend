@@ -15,11 +15,16 @@ const upload = multer({ storage });
 router.get("/", async (req, res) => {
   try {
     const categories = await Category.find();
-    res.json(categories);
+    const updatedCategories = categories.map((category) => ({
+      ...category._doc,
+      image: `${req.protocol}://${req.get("host")}/${category.image}`,
+    }));
+    res.json(updatedCategories);
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ error: "Failed to fetch categories" });
   }
 });
+
 
 router.get("/:id", async (req, res) => {
   try {
