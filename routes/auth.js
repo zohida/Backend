@@ -11,6 +11,9 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 router.post("/register", async (req,res) => {
     try {
+        if (!username || !email || !password) {
+          return res.status(400).json({ message: "All fields are required" });
+        }
         const {username, email, password} = req.body;
 
         const salt = await bcrypt.genSalt(10);
