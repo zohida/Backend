@@ -15,15 +15,26 @@ const upload = multer({ storage });
 router.get("/", async (req, res) => {
   try {
     const categories = await Category.find();
-    const updatedCategories = categories.map((category) => ({
-      ...category._doc,
-      image: `${req.protocol}://${req.get("host")}/${category.image.replace(/\\/g, "/")}`,
-    }));
+
+    // Kategoriyalarni yangilangan formatga o‘tkazish
+    const updatedCategories = categories.map((category) => {
+      const imageUrl = category.image
+        ? `${req.protocol}://${req.get("host")}/${category.image.replace(/\\/g, "/")}`
+        : `${req.protocol}://${req.get("host")}/uploads/default.png`; // Standart rasm
+
+      return {
+        ...category._doc,
+        image: imageUrl,
+      };
+    });
+
     res.json(updatedCategories);
   } catch (error) {
+    console.error("Error fetching categories:", error.message);
     res.status(500).json({ error: "Failed to fetch categories" });
   }
 });
+
 
 
 router.get("/:id", async (req, res) => {
