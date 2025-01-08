@@ -54,7 +54,7 @@ router.post("/login", async (req, res) => {
         return res.status(400).json({ message: "Invalid credentials" });
       }
   
-      const token = jwt.sign({ userID: user._id }, SECRET_KEY, { expiresIn: "12h" });
+      const token = jwt.sign({ userID: user._id }, SECRET_KEY, { expiresIn: "3d" });
       res.json({ token });
     } catch (error) {
       console.error("Error login:", error); 
@@ -72,7 +72,6 @@ router.post("/login", async (req, res) => {
       res.status(500).json({ message: "Error fetching users" });
     }
   });
-  
 
 router.get("/register", (req, res) => {
   res.status(200).json({ message: "Registration endpoint is working!" });
