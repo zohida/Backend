@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
     const categories = await Category.find();
     const updatedCategories = categories.map((category) => ({
       ...category._doc,
-      image: `${req.protocol}://${req.get("host")}/${category.image}`,
+      image: `${req.protocol}://${req.get("host")}/${category.image.replace(/\\/g, "/")}`,
     }));
     res.json(updatedCategories);
   } catch (error) {

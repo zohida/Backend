@@ -17,12 +17,13 @@ router.get("/", async (req, res) => {
     const products = await Product.find().populate("category");
     const updatedProducts = products.map((product) => ({
       ...product._doc,
-      image: `${req.protocol}://${req.get("host")}/${product.image}`,
+      image: `${req.protocol}://${req.get("host")}/${product.image.replace(/\\/g, "/")}`, 
       category: {
         ...product.category._doc,
-        image: `${req.protocol}://${req.get("host")}/${product.category.image}`,
+        image: `${req.protocol}://${req.get("host")}/${product.category.image.replace(/\\/g, "/")}`, 
       },
     }));
+
     res.json({
       products: updatedProducts,
       total: updatedProducts.length,
@@ -33,6 +34,7 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch products" });
   }
 });
+
 
 
 
